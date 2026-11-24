@@ -6,7 +6,7 @@ import { ART, STYLE_ART } from './art.js'
 export const SCENES = [
   { id: 'cat', name: 'Desk cat' }, { id: 'dog', name: 'Puppy' }, { id: 'anime', name: 'Evening sky' }, { id: 'pinboard', name: 'Pinboard' },
   { id: 'koi', name: 'Koi pond' }, { id: 'petals', name: 'Petals' }, { id: 'aurora', name: 'Aurora' }, { id: 'fireflies', name: 'Fireflies' },
-  { id: 'stars', name: 'Stars' }, { id: 'snow', name: 'Snow' }, { id: 'rain', name: 'Rain' },
+  { id: 'stars', name: 'Stars' }, { id: 'snow', name: 'Snow' }, { id: 'rain', name: 'Rain' },{ id: 'camp', name: 'Campsite' },
 ]
 const W = 1600, H = 1000
 const n1 = (x) => +x.toFixed(1)

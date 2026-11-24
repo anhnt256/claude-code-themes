@@ -182,4 +182,71 @@ export const ART = {
         + `<g transform="rotate(-6 -150 -420)"><rect x="-240" y="-456" width="190" height="76" rx="6" fill="${p.a}"/><path d="M-196 -456 v76" stroke="${paper}" stroke-width="2" stroke-dasharray="5 6"/><path d="M-176 -430 h96 M-176 -408 h60" stroke="${paper}" stroke-width="5" stroke-linecap="round" opacity=".85"/></g>`,
     }
   },
+
+  camp(p, r, x, uid) {
+    const v = x.v, G = 70, gy = -G
+    const w = wood(x.light)
+    const fx = 260, base = gy + 8   
+    const b = base - 10            
+
+ 
+    const glow = `<circle cx="${fx}" cy="${b - 40}" r="130" fill="url(#fg${uid})">${pulse('opacity', 1, 0.65, 2.2 / v)}</circle>`
+
+    const flame = `<g>`
+      + `<path d="M${fx} ${b - 96} C${fx + 36} ${b - 56} ${fx + 32} ${b - 6} ${fx} ${b} C${fx - 32} ${b - 6} ${fx - 36} ${b - 56} ${fx} ${b - 96} Z" fill="${p.a}"/>`
+      + `<path d="M${fx} ${b - 56} C${fx + 18} ${b - 34} ${fx + 16} ${b - 4} ${fx} ${b} C${fx - 16} ${b - 4} ${fx - 18} ${b - 34} ${fx} ${b - 56} Z" fill="#ffd978"/>`
+      + rock(-4, 4, fx, b, 2.2 / v) + `</g>`
+
+    const logs = `<rect x="${fx - 50}" y="${base - 16}" width="100" height="16" rx="8" fill="${w[1]}" transform="rotate(14 ${fx} ${base - 8})"/>`
+      + `<rect x="${fx - 50}" y="${base - 16}" width="100" height="16" rx="8" fill="${w[2]}" transform="rotate(-14 ${fx} ${base - 8})"/>`
+
+    const embers = [0, 1, 2].map((i) => `<circle class="steam" style="animation-delay:-${i * 1.1}s;animation-duration:${n1(3.3 / v)}s" cx="${fx - 14 + i * 14}" cy="${b - 70}" r="2.4" fill="#ffd978"/>`).join('')
+
+    const tx = 100, tb = base
+    const tent = `<ellipse cx="${tx + 10}" cy="${tb}" rx="105" ry="8" fill="${INK}" opacity=".25"/>`
+      + `<path d="M${tx} ${tb - 132} L${tx + 90} ${tb} L${tx - 90} ${tb} Z" fill="${p.b}"/>`
+      + `<path d="M${tx} ${tb - 132} L${tx + 90} ${tb} L${tx + 28} ${tb} Z" fill="${INK}" opacity=".18"/>`
+      + `<path d="M${tx} ${tb - 132} L${tx + 30} ${tb} L${tx - 30} ${tb} Z" fill="${p.ink2}"/>`
+      + `<path d="M${tx} ${tb - 70} L${tx + 18} ${tb} L${tx - 18} ${tb} Z" fill="#ffb347" opacity=".4">${pulse('opacity', 0.5, 0.25, 2.2 / v)}</path>`
+      + `<path d="M${tx} ${tb - 132} L${tx - 30} ${tb} M${tx} ${tb - 132} L${tx + 30} ${tb}" fill="none" stroke="${INK}" stroke-width="3" opacity=".35"/>`
+      + `<path d="M${tx} ${tb - 132} v-16" stroke="${INK}" stroke-width="4" stroke-linecap="round"/><path d="M${tx} ${tb - 148} l24 7 l-24 7 Z" fill="${p.a}"/>`
+
+    const stars = x.light ? '' : Array.from({ length: Math.round(40 + x.density * 100) }, () =>
+      `<circle class="tw" cx="${n1(r() * 100)}%" cy="${n1(r() * 62)}%" r="${n1(0.7 + r() * 1.5)}" fill="#fff" style="animation-duration:${n1(2 + r() * 4)}s;animation-delay:-${n1(r() * 5)}s"/>`).join('')
+    const cloud = (cx, cy, s) => `<g class="roam" style="animation-duration:${n1((40 + r() * 30) / v)}s;animation-delay:-${n1(r() * 40)}s">`
+      + `<ellipse cx="${cx}" cy="${cy}" rx="${n1(34 * s)}" ry="${n1(12 * s)}" fill="#fff" opacity=".9"/>`
+      + `<ellipse cx="${n1(cx - 12 * s)}" cy="${n1(cy - 9 * s)}" rx="${n1(16 * s)}" ry="${n1(11 * s)}" fill="#fff" opacity=".9"/></g>`
+    const mx = -150, my = 130
+    const sky = `<circle cx="${mx}" cy="${my}" r="120" fill="url(#mg${uid})"/>`
+      + (x.light
+        ? `<circle cx="${mx}" cy="${my}" r="40" fill="#ffd978"/>` + cloud(-300, 230, 1.2) + cloud(-110, 300, 0.9)
+        : `<circle cx="${mx}" cy="${my}" r="38" fill="#fdf3cf"/><circle cx="${mx - 12}" cy="${my - 10}" r="7" fill="#e8dcae" opacity=".7"/><circle cx="${mx + 12}" cy="${my + 12}" r="5" fill="#e8dcae" opacity=".7"/><circle cx="${mx + 8}" cy="${my - 16}" r="3.5" fill="#e8dcae" opacity=".7"/>`)
+
+    const ground = gy + 8
+    const pine = (cx, h) => {
+      const w2 = h * 0.42
+      const tier = (top, bot, hw) => `<path d="M${cx} ${n1(ground - top)} L${n1(cx + hw)} ${n1(ground - bot)} L${n1(cx - hw)} ${n1(ground - bot)} Z" fill="${p.leaf}"/>`
+        + `<path d="M${cx} ${n1(ground - top)} L${n1(cx + hw)} ${n1(ground - bot)} L${cx} ${n1(ground - bot)} Z" fill="${INK}" opacity=".22"/>`
+      return `<g><rect x="${cx - 7}" y="${ground - 24}" width="14" height="28" fill="${w[2]}"/>`
+        + tier(h * 0.55, h * 0.1, w2) + tier(h * 0.78, h * 0.34, w2 * 0.8) + tier(h, h * 0.6, w2 * 0.6)
+        + rock(-1.2, 1.2, cx, ground, (5 + r() * 3) / v, r() * 5) + `</g>`
+    }
+    const trees = pine(-280, 170) + pine(-175, 235) + pine(-65, 300)
+
+    // A log to sit on, in front of the trees.
+    const seat = `<ellipse cx="-205" cy="${gy + 22}" rx="70" ry="7" fill="${INK}" opacity=".25"/>`
+      + `<rect x="-262" y="${gy - 6}" width="112" height="28" rx="14" fill="${w[1]}"/>`
+      + `<rect x="-250" y="${gy - 2}" width="88" height="5" rx="2.5" fill="${w[0]}" opacity=".5"/>`
+      + `<ellipse cx="-154" cy="${gy + 8}" rx="10" ry="14" fill="${w[0]}"/><ellipse cx="-154" cy="${gy + 8}" rx="5" ry="8" fill="none" stroke="${w[2]}" stroke-width="2"/>`    
+
+       return {
+      defs: `<radialGradient id="fg${uid}"><stop offset="0" stop-color="#ffb347" stop-opacity="${x.light ? 0.3 : 0.55}"/><stop offset="1" stop-color="#ffb347" stop-opacity="0"/></radialGradient>`
+        + `<radialGradient id="mg${uid}"><stop offset="0" stop-color="${x.light ? '#ffe9a8' : '#fdf3cf'}" stop-opacity=".5"/><stop offset="1" stop-color="${x.light ? '#ffe9a8' : '#fdf3cf'}" stop-opacity="0"/></radialGradient>`,
+      full: stars, tl: '', tr: sky,
+      bl: `<rect x="-20" y="${gy}" width="9000" height="${G + 20}" fill="${p.ink2}"/>`
+        + `<rect x="-20" y="${gy}" width="9000" height="8" fill="${p.leaf}"/>`
+        + tent + glow + flame + logs + embers,
+      br: trees+ seat,
+    }
+  },
 }
