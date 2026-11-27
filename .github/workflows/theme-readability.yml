@@ -1,0 +1,48 @@
+name: Check changed theme readability
+
+on:
+  pull_request:
+    paths:
+      - 'themes/*.json'
+      - '.github/workflows/theme-readability.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  readability:
+    name: Check changed themes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out pull request
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check only changed theme files
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+
+          mapfile -d '' changed_themes < <(
+            git diff --name-only -z --diff-filter=ACMR \
+              "$BASE_SHA" "$HEAD_SHA" -- 'themes/*.json'
+          )
+
+          if (( ${#changed_themes[@]} == 0 )); then
+            echo "No changed theme JSON files to check."
+            exit 0
+          fi
+
+          for theme in "${changed_themes[@]}"; do
+            echo "Checking ${theme}"
+            node cli.mjs check "${theme}"
+          done
